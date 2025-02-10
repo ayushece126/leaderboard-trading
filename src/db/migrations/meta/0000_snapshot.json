@@ -1,11 +1,11 @@
 {
-  "id": "3e4dddd5-9bf5-44ba-bbbe-d6a0b9fcd7b3",
+  "id": "5e02e540-205a-443d-8f87-537009e5035a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.trades": {
-      "name": "trades",
+    "public.leaderboard_registrations": {
+      "name": "leaderboard_registrations",
       "schema": "",
       "columns": {
         "id": {
@@ -14,84 +14,256 @@
           "primaryKey": true,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "token_symbol": {
-          "name": "token_symbol",
-          "type": "varchar(16)",
+        "user_uuid": {
+          "name": "user_uuid",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "sol_amount": {
-          "name": "sol_amount",
-          "type": "numeric",
+        "wallet_public_key": {
+          "name": "wallet_public_key",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "usd_value": {
-          "name": "usd_value",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "action_type": {
-          "name": "action_type",
-          "type": "varchar(4)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "success": {
-          "name": "success",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": true
-        },
-        "timestamp": {
-          "name": "timestamp",
+        "registered_at": {
+          "name": "registered_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "now()"
-        },
-        "signature": {
-          "name": "signature",
-          "type": "varchar(88)",
-          "primaryKey": false,
-          "notNull": true
         }
       },
       "indexes": {
-        "user_idx": {
-          "name": "user_idx",
+        "leaderboard_registration_unique_user_wallet": {
+          "name": "leaderboard_registration_unique_user_wallet",
           "columns": [
             {
-              "expression": "user_id",
+              "expression": "user_uuid",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "wallet_public_key",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             }
           ],
-          "isUnique": false,
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
         }
       },
       "foreignKeys": {
-        "trades_user_id_users_id_fk": {
-          "name": "trades_user_id_users_id_fk",
-          "tableFrom": "trades",
+        "leaderboard_registrations_user_uuid_users_uuid_fk": {
+          "name": "leaderboard_registrations_user_uuid_users_uuid_fk",
+          "tableFrom": "leaderboard_registrations",
           "tableTo": "users",
           "columnsFrom": [
-            "user_id"
+            "user_uuid"
           ],
           "columnsTo": [
-            "id"
+            "uuid"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "leaderboard_registrations_wallet_public_key_wallets_public_key_fk": {
+          "name": "leaderboard_registrations_wallet_public_key_wallets_public_key_fk",
+          "tableFrom": "leaderboard_registrations",
+          "tableTo": "wallets",
+          "columnsFrom": [
+            "wallet_public_key"
+          ],
+          "columnsTo": [
+            "public_key"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.sessions": {
+      "name": "sessions",
+      "schema": "",
+      "columns": {
+        "session_uuid": {
+          "name": "session_uuid",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_uuid": {
+          "name": "user_uuid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fingerprint": {
+          "name": "fingerprint",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "nonce": {
+          "name": "nonce",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "session_token": {
+          "name": "session_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "session_info": {
+          "name": "session_info",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "NOW()"
+        },
+        "last_active_at": {
+          "name": "last_active_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "NOW()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "sessions_user_uuid_users_uuid_fk": {
+          "name": "sessions_user_uuid_users_uuid_fk",
+          "tableFrom": "sessions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_uuid"
+          ],
+          "columnsTo": [
+            "uuid"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_pnl_data": {
+      "name": "user_pnl_data",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_uuid": {
+          "name": "user_uuid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "wallet_public_key": {
+          "name": "wallet_public_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "period": {
+          "name": "period",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "realized_pnl": {
+          "name": "realized_pnl",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "user_pnl_data_user_period_idx": {
+          "name": "user_pnl_data_user_period_idx",
+          "columns": [
+            {
+              "expression": "user_uuid",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "period",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "user_pnl_data_user_uuid_users_uuid_fk": {
+          "name": "user_pnl_data_user_uuid_users_uuid_fk",
+          "tableFrom": "user_pnl_data",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_uuid"
+          ],
+          "columnsTo": [
+            "uuid"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "user_pnl_data_wallet_public_key_wallets_public_key_fk": {
+          "name": "user_pnl_data_wallet_public_key_wallets_public_key_fk",
+          "tableFrom": "user_pnl_data",
+          "tableTo": "wallets",
+          "columnsFrom": [
+            "wallet_public_key"
+          ],
+          "columnsTo": [
+            "public_key"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -107,67 +279,118 @@
       "name": "users",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
+        "uuid": {
+          "name": "uuid",
+          "type": "text",
           "primaryKey": true,
           "notNull": true
         },
-        "wallet_address": {
-          "name": "wallet_address",
-          "type": "varchar(44)",
+        "telegram_id": {
+          "name": "telegram_id",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "username": {
           "name": "username",
-          "type": "varchar(32)",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "registered_at": {
-          "name": "registered_at",
+        "pfp_url": {
+          "name": "pfp_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "referral_tag": {
+          "name": "referral_tag",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "referrer": {
+          "name": "referrer",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "primary_wallet_pub_key": {
+          "name": "primary_wallet_pub_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "xp": {
+          "name": "xp",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "now()"
         },
-        "last_active": {
-          "name": "last_active",
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "now()"
         }
       },
-      "indexes": {
-        "wallet_idx": {
-          "name": "wallet_idx",
-          "columns": [
-            {
-              "expression": "wallet_address",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
+      "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "users_wallet_address_unique": {
-          "name": "users_wallet_address_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "wallet_address"
-          ]
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.wallets": {
+      "name": "wallets",
+      "schema": "",
+      "columns": {
+        "public_key": {
+          "name": "public_key",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "balance": {
+          "name": "balance",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

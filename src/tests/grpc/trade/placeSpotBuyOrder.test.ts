@@ -1,9 +1,5 @@
 import { createTradeClient } from "@/grpc/tradeClient"; // Adjust path
-import {
-  SpotBuyRequest,
-  SpotBuyResponse,
-} from "@/grpc/generated/service/trade_pb"; // Adjust path
-import { BigInt } from "@bufbuild/protobuf"; // Import BigInt
+import { SpotBuyRequest, SpotBuyResponse } from "@/../proto/trade"; // Adjust path
 
 async function testSpotBuy() {
   const client = createTradeClient();
@@ -26,7 +22,7 @@ async function testSpotBuy() {
       });
     });
 
-    console.log("SpotBuy Response:", response.toJSON());
+    console.log("SpotBuy Response:", JSON.stringify(response));
     console.log("Signature:", response.signature);
   } catch (error) {
     console.error("Error in spotBuy test:", error);

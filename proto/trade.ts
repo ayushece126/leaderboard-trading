@@ -59,8 +59,7 @@ export interface SpotSellResponse {
   signature: string;
 }
 
-export interface GetTradeConfigPresetsRequest {
-}
+export interface GetTradeConfigPresetsRequest {}
 
 export interface GetTradeConfigPresetsResponse {
   presets: TradeConfigPreset[];
@@ -75,14 +74,24 @@ export interface SetTradeConfigPresetResponse {
 }
 
 function createBaseTradeConfig(): TradeConfig {
-  return { priorityFee: 0n, maxSlippageBps: 0, mevProtectEnabled: false, tip: 0n };
+  return {
+    priorityFee: 0n,
+    maxSlippageBps: 0,
+    mevProtectEnabled: false,
+    tip: 0n,
+  };
 }
 
 export const TradeConfig: MessageFns<TradeConfig> = {
-  encode(message: TradeConfig, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: TradeConfig,
+    writer: BinaryWriter = new BinaryWriter()
+  ): BinaryWriter {
     if (message.priorityFee !== 0n) {
       if (BigInt.asUintN(64, message.priorityFee) !== message.priorityFee) {
-        throw new globalThis.Error("value provided for field message.priorityFee of type uint64 too large");
+        throw new globalThis.Error(
+          "value provided for field message.priorityFee of type uint64 too large"
+        );
       }
       writer.uint32(8).uint64(message.priorityFee);
     }
@@ -94,7 +103,9 @@ export const TradeConfig: MessageFns<TradeConfig> = {
     }
     if (message.tip !== 0n) {
       if (BigInt.asUintN(64, message.tip) !== message.tip) {
-        throw new globalThis.Error("value provided for field message.tip of type uint64 too large");
+        throw new globalThis.Error(
+          "value provided for field message.tip of type uint64 too large"
+        );
       }
       writer.uint32(32).uint64(message.tip);
     }
@@ -102,7 +113,8 @@ export const TradeConfig: MessageFns<TradeConfig> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): TradeConfig {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTradeConfig();
     while (reader.pos < end) {
@@ -152,8 +164,12 @@ export const TradeConfig: MessageFns<TradeConfig> = {
   fromJSON(object: any): TradeConfig {
     return {
       priorityFee: isSet(object.priorityFee) ? BigInt(object.priorityFee) : 0n,
-      maxSlippageBps: isSet(object.maxSlippageBps) ? globalThis.Number(object.maxSlippageBps) : 0,
-      mevProtectEnabled: isSet(object.mevProtectEnabled) ? globalThis.Boolean(object.mevProtectEnabled) : false,
+      maxSlippageBps: isSet(object.maxSlippageBps)
+        ? globalThis.Number(object.maxSlippageBps)
+        : 0,
+      mevProtectEnabled: isSet(object.mevProtectEnabled)
+        ? globalThis.Boolean(object.mevProtectEnabled)
+        : false,
       tip: isSet(object.tip) ? BigInt(object.tip) : 0n,
     };
   },
@@ -178,7 +194,9 @@ export const TradeConfig: MessageFns<TradeConfig> = {
   create<I extends Exact<DeepPartial<TradeConfig>, I>>(base?: I): TradeConfig {
     return TradeConfig.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<TradeConfig>, I>>(object: I): TradeConfig {
+  fromPartial<I extends Exact<DeepPartial<TradeConfig>, I>>(
+    object: I
+  ): TradeConfig {
     const message = createBaseTradeConfig();
     message.priorityFee = object.priorityFee ?? 0n;
     message.maxSlippageBps = object.maxSlippageBps ?? 0;
@@ -193,7 +211,10 @@ function createBaseTradeConfigPreset(): TradeConfigPreset {
 }
 
 export const TradeConfigPreset: MessageFns<TradeConfigPreset> = {
-  encode(message: TradeConfigPreset, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: TradeConfigPreset,
+    writer: BinaryWriter = new BinaryWriter()
+  ): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -207,7 +228,8 @@ export const TradeConfigPreset: MessageFns<TradeConfigPreset> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): TradeConfigPreset {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTradeConfigPreset();
     while (reader.pos < end) {
@@ -249,8 +271,12 @@ export const TradeConfigPreset: MessageFns<TradeConfigPreset> = {
   fromJSON(object: any): TradeConfigPreset {
     return {
       name: isSet(object.name) ? globalThis.String(object.name) : "",
-      buyConfig: isSet(object.buyConfig) ? TradeConfig.fromJSON(object.buyConfig) : undefined,
-      sellConfig: isSet(object.sellConfig) ? TradeConfig.fromJSON(object.sellConfig) : undefined,
+      buyConfig: isSet(object.buyConfig)
+        ? TradeConfig.fromJSON(object.buyConfig)
+        : undefined,
+      sellConfig: isSet(object.sellConfig)
+        ? TradeConfig.fromJSON(object.sellConfig)
+        : undefined,
     };
   },
 
@@ -268,28 +294,43 @@ export const TradeConfigPreset: MessageFns<TradeConfigPreset> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<TradeConfigPreset>, I>>(base?: I): TradeConfigPreset {
+  create<I extends Exact<DeepPartial<TradeConfigPreset>, I>>(
+    base?: I
+  ): TradeConfigPreset {
     return TradeConfigPreset.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<TradeConfigPreset>, I>>(object: I): TradeConfigPreset {
+  fromPartial<I extends Exact<DeepPartial<TradeConfigPreset>, I>>(
+    object: I
+  ): TradeConfigPreset {
     const message = createBaseTradeConfigPreset();
     message.name = object.name ?? "";
-    message.buyConfig = (object.buyConfig !== undefined && object.buyConfig !== null)
-      ? TradeConfig.fromPartial(object.buyConfig)
-      : undefined;
-    message.sellConfig = (object.sellConfig !== undefined && object.sellConfig !== null)
-      ? TradeConfig.fromPartial(object.sellConfig)
-      : undefined;
+    message.buyConfig =
+      object.buyConfig !== undefined && object.buyConfig !== null
+        ? TradeConfig.fromPartial(object.buyConfig)
+        : undefined;
+    message.sellConfig =
+      object.sellConfig !== undefined && object.sellConfig !== null
+        ? TradeConfig.fromPartial(object.sellConfig)
+        : undefined;
     return message;
   },
 };
 
 function createBaseSpotBuyRequest(): SpotBuyRequest {
-  return { asset: undefined, fromPubKey: "", quoteAmount: 0n, configPresetName: "", password: "" };
+  return {
+    asset: undefined,
+    fromPubKey: "",
+    quoteAmount: 0n,
+    configPresetName: "",
+    password: "",
+  };
 }
 
 export const SpotBuyRequest: MessageFns<SpotBuyRequest> = {
-  encode(message: SpotBuyRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: SpotBuyRequest,
+    writer: BinaryWriter = new BinaryWriter()
+  ): BinaryWriter {
     if (message.asset !== undefined) {
       writer.uint32(10).string(message.asset);
     }
@@ -298,7 +339,9 @@ export const SpotBuyRequest: MessageFns<SpotBuyRequest> = {
     }
     if (message.quoteAmount !== 0n) {
       if (BigInt.asUintN(64, message.quoteAmount) !== message.quoteAmount) {
-        throw new globalThis.Error("value provided for field message.quoteAmount of type uint64 too large");
+        throw new globalThis.Error(
+          "value provided for field message.quoteAmount of type uint64 too large"
+        );
       }
       writer.uint32(24).uint64(message.quoteAmount);
     }
@@ -312,7 +355,8 @@ export const SpotBuyRequest: MessageFns<SpotBuyRequest> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): SpotBuyRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSpotBuyRequest();
     while (reader.pos < end) {
@@ -370,10 +414,16 @@ export const SpotBuyRequest: MessageFns<SpotBuyRequest> = {
   fromJSON(object: any): SpotBuyRequest {
     return {
       asset: isSet(object.asset) ? globalThis.String(object.asset) : undefined,
-      fromPubKey: isSet(object.fromPubKey) ? globalThis.String(object.fromPubKey) : "",
+      fromPubKey: isSet(object.fromPubKey)
+        ? globalThis.String(object.fromPubKey)
+        : "",
       quoteAmount: isSet(object.quoteAmount) ? BigInt(object.quoteAmount) : 0n,
-      configPresetName: isSet(object.configPresetName) ? globalThis.String(object.configPresetName) : "",
-      password: isSet(object.password) ? globalThis.String(object.password) : "",
+      configPresetName: isSet(object.configPresetName)
+        ? globalThis.String(object.configPresetName)
+        : "",
+      password: isSet(object.password)
+        ? globalThis.String(object.password)
+        : "",
     };
   },
 
@@ -397,10 +447,14 @@ export const SpotBuyRequest: MessageFns<SpotBuyRequest> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<SpotBuyRequest>, I>>(base?: I): SpotBuyRequest {
+  create<I extends Exact<DeepPartial<SpotBuyRequest>, I>>(
+    base?: I
+  ): SpotBuyRequest {
     return SpotBuyRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<SpotBuyRequest>, I>>(object: I): SpotBuyRequest {
+  fromPartial<I extends Exact<DeepPartial<SpotBuyRequest>, I>>(
+    object: I
+  ): SpotBuyRequest {
     const message = createBaseSpotBuyRequest();
     message.asset = object.asset ?? undefined;
     message.fromPubKey = object.fromPubKey ?? "";
@@ -416,7 +470,10 @@ function createBaseSpotBuyResponse(): SpotBuyResponse {
 }
 
 export const SpotBuyResponse: MessageFns<SpotBuyResponse> = {
-  encode(message: SpotBuyResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: SpotBuyResponse,
+    writer: BinaryWriter = new BinaryWriter()
+  ): BinaryWriter {
     if (message.signature !== "") {
       writer.uint32(10).string(message.signature);
     }
@@ -424,7 +481,8 @@ export const SpotBuyResponse: MessageFns<SpotBuyResponse> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): SpotBuyResponse {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSpotBuyResponse();
     while (reader.pos < end) {
@@ -448,7 +506,11 @@ export const SpotBuyResponse: MessageFns<SpotBuyResponse> = {
   },
 
   fromJSON(object: any): SpotBuyResponse {
-    return { signature: isSet(object.signature) ? globalThis.String(object.signature) : "" };
+    return {
+      signature: isSet(object.signature)
+        ? globalThis.String(object.signature)
+        : "",
+    };
   },
 
   toJSON(message: SpotBuyResponse): unknown {
@@ -459,10 +521,14 @@ export const SpotBuyResponse: MessageFns<SpotBuyResponse> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<SpotBuyResponse>, I>>(base?: I): SpotBuyResponse {
+  create<I extends Exact<DeepPartial<SpotBuyResponse>, I>>(
+    base?: I
+  ): SpotBuyResponse {
     return SpotBuyResponse.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<SpotBuyResponse>, I>>(object: I): SpotBuyResponse {
+  fromPartial<I extends Exact<DeepPartial<SpotBuyResponse>, I>>(
+    object: I
+  ): SpotBuyResponse {
     const message = createBaseSpotBuyResponse();
     message.signature = object.signature ?? "";
     return message;
@@ -481,7 +547,10 @@ function createBaseSpotSellRequest(): SpotSellRequest {
 }
 
 export const SpotSellRequest: MessageFns<SpotSellRequest> = {
-  encode(message: SpotSellRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: SpotSellRequest,
+    writer: BinaryWriter = new BinaryWriter()
+  ): BinaryWriter {
     if (message.asset !== undefined) {
       writer.uint32(10).string(message.asset);
     }
@@ -490,7 +559,9 @@ export const SpotSellRequest: MessageFns<SpotSellRequest> = {
     }
     if (message.baseAmount !== undefined) {
       if (BigInt.asUintN(64, message.baseAmount) !== message.baseAmount) {
-        throw new globalThis.Error("value provided for field message.baseAmount of type uint64 too large");
+        throw new globalThis.Error(
+          "value provided for field message.baseAmount of type uint64 too large"
+        );
       }
       writer.uint32(24).uint64(message.baseAmount);
     }
@@ -507,7 +578,8 @@ export const SpotSellRequest: MessageFns<SpotSellRequest> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): SpotSellRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSpotSellRequest();
     while (reader.pos < end) {
@@ -573,11 +645,21 @@ export const SpotSellRequest: MessageFns<SpotSellRequest> = {
   fromJSON(object: any): SpotSellRequest {
     return {
       asset: isSet(object.asset) ? globalThis.String(object.asset) : undefined,
-      fromPubKey: isSet(object.fromPubKey) ? globalThis.String(object.fromPubKey) : "",
-      baseAmount: isSet(object.baseAmount) ? BigInt(object.baseAmount) : undefined,
-      baseAmountBps: isSet(object.baseAmountBps) ? globalThis.Number(object.baseAmountBps) : undefined,
-      configPresetName: isSet(object.configPresetName) ? globalThis.String(object.configPresetName) : "",
-      password: isSet(object.password) ? globalThis.String(object.password) : "",
+      fromPubKey: isSet(object.fromPubKey)
+        ? globalThis.String(object.fromPubKey)
+        : "",
+      baseAmount: isSet(object.baseAmount)
+        ? BigInt(object.baseAmount)
+        : undefined,
+      baseAmountBps: isSet(object.baseAmountBps)
+        ? globalThis.Number(object.baseAmountBps)
+        : undefined,
+      configPresetName: isSet(object.configPresetName)
+        ? globalThis.String(object.configPresetName)
+        : "",
+      password: isSet(object.password)
+        ? globalThis.String(object.password)
+        : "",
     };
   },
 
@@ -604,10 +686,14 @@ export const SpotSellRequest: MessageFns<SpotSellRequest> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<SpotSellRequest>, I>>(base?: I): SpotSellRequest {
+  create<I extends Exact<DeepPartial<SpotSellRequest>, I>>(
+    base?: I
+  ): SpotSellRequest {
     return SpotSellRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<SpotSellRequest>, I>>(object: I): SpotSellRequest {
+  fromPartial<I extends Exact<DeepPartial<SpotSellRequest>, I>>(
+    object: I
+  ): SpotSellRequest {
     const message = createBaseSpotSellRequest();
     message.asset = object.asset ?? undefined;
     message.fromPubKey = object.fromPubKey ?? "";
@@ -624,7 +710,10 @@ function createBaseSpotSellResponse(): SpotSellResponse {
 }
 
 export const SpotSellResponse: MessageFns<SpotSellResponse> = {
-  encode(message: SpotSellResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+  encode(
+    message: SpotSellResponse,
+    writer: BinaryWriter = new BinaryWriter()
+  ): BinaryWriter {
     if (message.signature !== "") {
       writer.uint32(10).string(message.signature);
     }
@@ -632,7 +721,8 @@ export const SpotSellResponse: MessageFns<SpotSellResponse> = {
   },
 
   decode(input: BinaryReader | Uint8Array, length?: number): SpotSellResponse {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSpotSellResponse();
     while (reader.pos < end) {
@@ -656,7 +746,11 @@ export const SpotSellResponse: MessageFns<SpotSellResponse> = {
   },
 
   fromJSON(object: any): SpotSellResponse {
-    return { signature: isSet(object.signature) ? globalThis.String(object.signature) : "" };
+    return {
+      signature: isSet(object.signature)
+        ? globalThis.String(object.signature)
+        : "",
+    };
   },
 
   toJSON(message: SpotSellResponse): unknown {
@@ -667,10 +761,14 @@ export const SpotSellResponse: MessageFns<SpotSellResponse> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<SpotSellResponse>, I>>(base?: I): SpotSellResponse {
+  create<I extends Exact<DeepPartial<SpotSellResponse>, I>>(
+    base?: I
+  ): SpotSellResponse {
     return SpotSellResponse.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<SpotSellResponse>, I>>(object: I): SpotSellResponse {
+  fromPartial<I extends Exact<DeepPartial<SpotSellResponse>, I>>(
+    object: I
+  ): SpotSellResponse {
     const message = createBaseSpotSellResponse();
     message.signature = object.signature ?? "";
     return message;
@@ -681,226 +779,287 @@ function createBaseGetTradeConfigPresetsRequest(): GetTradeConfigPresetsRequest 
   return {};
 }
 
-export const GetTradeConfigPresetsRequest: MessageFns<GetTradeConfigPresetsRequest> = {
-  encode(_: GetTradeConfigPresetsRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    return writer;
-  },
+export const GetTradeConfigPresetsRequest: MessageFns<GetTradeConfigPresetsRequest> =
+  {
+    encode(
+      _: GetTradeConfigPresetsRequest,
+      writer: BinaryWriter = new BinaryWriter()
+    ): BinaryWriter {
+      return writer;
+    },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GetTradeConfigPresetsRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetTradeConfigPresetsRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
+    decode(
+      input: BinaryReader | Uint8Array,
+      length?: number
+    ): GetTradeConfigPresetsRequest {
+      const reader =
+        input instanceof BinaryReader ? input : new BinaryReader(input);
+      let end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGetTradeConfigPresetsRequest();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
+      return message;
+    },
 
-  fromJSON(_: any): GetTradeConfigPresetsRequest {
-    return {};
-  },
+    fromJSON(_: any): GetTradeConfigPresetsRequest {
+      return {};
+    },
 
-  toJSON(_: GetTradeConfigPresetsRequest): unknown {
-    const obj: any = {};
-    return obj;
-  },
+    toJSON(_: GetTradeConfigPresetsRequest): unknown {
+      const obj: any = {};
+      return obj;
+    },
 
-  create<I extends Exact<DeepPartial<GetTradeConfigPresetsRequest>, I>>(base?: I): GetTradeConfigPresetsRequest {
-    return GetTradeConfigPresetsRequest.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<GetTradeConfigPresetsRequest>, I>>(_: I): GetTradeConfigPresetsRequest {
-    const message = createBaseGetTradeConfigPresetsRequest();
-    return message;
-  },
-};
+    create<I extends Exact<DeepPartial<GetTradeConfigPresetsRequest>, I>>(
+      base?: I
+    ): GetTradeConfigPresetsRequest {
+      return GetTradeConfigPresetsRequest.fromPartial(base ?? ({} as any));
+    },
+    fromPartial<I extends Exact<DeepPartial<GetTradeConfigPresetsRequest>, I>>(
+      _: I
+    ): GetTradeConfigPresetsRequest {
+      const message = createBaseGetTradeConfigPresetsRequest();
+      return message;
+    },
+  };
 
 function createBaseGetTradeConfigPresetsResponse(): GetTradeConfigPresetsResponse {
   return { presets: [] };
 }
 
-export const GetTradeConfigPresetsResponse: MessageFns<GetTradeConfigPresetsResponse> = {
-  encode(message: GetTradeConfigPresetsResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    for (const v of message.presets) {
-      TradeConfigPreset.encode(v!, writer.uint32(10).fork()).join();
-    }
-    return writer;
-  },
+export const GetTradeConfigPresetsResponse: MessageFns<GetTradeConfigPresetsResponse> =
+  {
+    encode(
+      message: GetTradeConfigPresetsResponse,
+      writer: BinaryWriter = new BinaryWriter()
+    ): BinaryWriter {
+      for (const v of message.presets) {
+        TradeConfigPreset.encode(v!, writer.uint32(10).fork()).join();
+      }
+      return writer;
+    },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): GetTradeConfigPresetsResponse {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetTradeConfigPresetsResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
+    decode(
+      input: BinaryReader | Uint8Array,
+      length?: number
+    ): GetTradeConfigPresetsResponse {
+      const reader =
+        input instanceof BinaryReader ? input : new BinaryReader(input);
+      let end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseGetTradeConfigPresetsResponse();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.presets.push(
+              TradeConfigPreset.decode(reader, reader.uint32())
+            );
+            continue;
           }
-
-          message.presets.push(TradeConfigPreset.decode(reader, reader.uint32()));
-          continue;
         }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
+      return message;
+    },
+
+    fromJSON(object: any): GetTradeConfigPresetsResponse {
+      return {
+        presets: globalThis.Array.isArray(object?.presets)
+          ? object.presets.map((e: any) => TradeConfigPreset.fromJSON(e))
+          : [],
+      };
+    },
+
+    toJSON(message: GetTradeConfigPresetsResponse): unknown {
+      const obj: any = {};
+      if (message.presets?.length) {
+        obj.presets = message.presets.map((e) => TradeConfigPreset.toJSON(e));
       }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
+      return obj;
+    },
 
-  fromJSON(object: any): GetTradeConfigPresetsResponse {
-    return {
-      presets: globalThis.Array.isArray(object?.presets)
-        ? object.presets.map((e: any) => TradeConfigPreset.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: GetTradeConfigPresetsResponse): unknown {
-    const obj: any = {};
-    if (message.presets?.length) {
-      obj.presets = message.presets.map((e) => TradeConfigPreset.toJSON(e));
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<GetTradeConfigPresetsResponse>, I>>(base?: I): GetTradeConfigPresetsResponse {
-    return GetTradeConfigPresetsResponse.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<GetTradeConfigPresetsResponse>, I>>(
-    object: I,
-  ): GetTradeConfigPresetsResponse {
-    const message = createBaseGetTradeConfigPresetsResponse();
-    message.presets = object.presets?.map((e) => TradeConfigPreset.fromPartial(e)) || [];
-    return message;
-  },
-};
+    create<I extends Exact<DeepPartial<GetTradeConfigPresetsResponse>, I>>(
+      base?: I
+    ): GetTradeConfigPresetsResponse {
+      return GetTradeConfigPresetsResponse.fromPartial(base ?? ({} as any));
+    },
+    fromPartial<I extends Exact<DeepPartial<GetTradeConfigPresetsResponse>, I>>(
+      object: I
+    ): GetTradeConfigPresetsResponse {
+      const message = createBaseGetTradeConfigPresetsResponse();
+      message.presets =
+        object.presets?.map((e) => TradeConfigPreset.fromPartial(e)) || [];
+      return message;
+    },
+  };
 
 function createBaseSetTradeConfigPresetRequest(): SetTradeConfigPresetRequest {
   return { preset: undefined };
 }
 
-export const SetTradeConfigPresetRequest: MessageFns<SetTradeConfigPresetRequest> = {
-  encode(message: SetTradeConfigPresetRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.preset !== undefined) {
-      TradeConfigPreset.encode(message.preset, writer.uint32(10).fork()).join();
-    }
-    return writer;
-  },
+export const SetTradeConfigPresetRequest: MessageFns<SetTradeConfigPresetRequest> =
+  {
+    encode(
+      message: SetTradeConfigPresetRequest,
+      writer: BinaryWriter = new BinaryWriter()
+    ): BinaryWriter {
+      if (message.preset !== undefined) {
+        TradeConfigPreset.encode(
+          message.preset,
+          writer.uint32(10).fork()
+        ).join();
+      }
+      return writer;
+    },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): SetTradeConfigPresetRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSetTradeConfigPresetRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
+    decode(
+      input: BinaryReader | Uint8Array,
+      length?: number
+    ): SetTradeConfigPresetRequest {
+      const reader =
+        input instanceof BinaryReader ? input : new BinaryReader(input);
+      let end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseSetTradeConfigPresetRequest();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.preset = TradeConfigPreset.decode(reader, reader.uint32());
+            continue;
           }
-
-          message.preset = TradeConfigPreset.decode(reader, reader.uint32());
-          continue;
         }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
+      return message;
+    },
+
+    fromJSON(object: any): SetTradeConfigPresetRequest {
+      return {
+        preset: isSet(object.preset)
+          ? TradeConfigPreset.fromJSON(object.preset)
+          : undefined,
+      };
+    },
+
+    toJSON(message: SetTradeConfigPresetRequest): unknown {
+      const obj: any = {};
+      if (message.preset !== undefined) {
+        obj.preset = TradeConfigPreset.toJSON(message.preset);
       }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
+      return obj;
+    },
 
-  fromJSON(object: any): SetTradeConfigPresetRequest {
-    return { preset: isSet(object.preset) ? TradeConfigPreset.fromJSON(object.preset) : undefined };
-  },
-
-  toJSON(message: SetTradeConfigPresetRequest): unknown {
-    const obj: any = {};
-    if (message.preset !== undefined) {
-      obj.preset = TradeConfigPreset.toJSON(message.preset);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<SetTradeConfigPresetRequest>, I>>(base?: I): SetTradeConfigPresetRequest {
-    return SetTradeConfigPresetRequest.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<SetTradeConfigPresetRequest>, I>>(object: I): SetTradeConfigPresetRequest {
-    const message = createBaseSetTradeConfigPresetRequest();
-    message.preset = (object.preset !== undefined && object.preset !== null)
-      ? TradeConfigPreset.fromPartial(object.preset)
-      : undefined;
-    return message;
-  },
-};
+    create<I extends Exact<DeepPartial<SetTradeConfigPresetRequest>, I>>(
+      base?: I
+    ): SetTradeConfigPresetRequest {
+      return SetTradeConfigPresetRequest.fromPartial(base ?? ({} as any));
+    },
+    fromPartial<I extends Exact<DeepPartial<SetTradeConfigPresetRequest>, I>>(
+      object: I
+    ): SetTradeConfigPresetRequest {
+      const message = createBaseSetTradeConfigPresetRequest();
+      message.preset =
+        object.preset !== undefined && object.preset !== null
+          ? TradeConfigPreset.fromPartial(object.preset)
+          : undefined;
+      return message;
+    },
+  };
 
 function createBaseSetTradeConfigPresetResponse(): SetTradeConfigPresetResponse {
   return { success: false };
 }
 
-export const SetTradeConfigPresetResponse: MessageFns<SetTradeConfigPresetResponse> = {
-  encode(message: SetTradeConfigPresetResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.success !== false) {
-      writer.uint32(8).bool(message.success);
-    }
-    return writer;
-  },
+export const SetTradeConfigPresetResponse: MessageFns<SetTradeConfigPresetResponse> =
+  {
+    encode(
+      message: SetTradeConfigPresetResponse,
+      writer: BinaryWriter = new BinaryWriter()
+    ): BinaryWriter {
+      if (message.success !== false) {
+        writer.uint32(8).bool(message.success);
+      }
+      return writer;
+    },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): SetTradeConfigPresetResponse {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSetTradeConfigPresetResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
+    decode(
+      input: BinaryReader | Uint8Array,
+      length?: number
+    ): SetTradeConfigPresetResponse {
+      const reader =
+        input instanceof BinaryReader ? input : new BinaryReader(input);
+      let end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseSetTradeConfigPresetResponse();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 8) {
+              break;
+            }
+
+            message.success = reader.bool();
+            continue;
           }
-
-          message.success = reader.bool();
-          continue;
         }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
+      return message;
+    },
+
+    fromJSON(object: any): SetTradeConfigPresetResponse {
+      return {
+        success: isSet(object.success)
+          ? globalThis.Boolean(object.success)
+          : false,
+      };
+    },
+
+    toJSON(message: SetTradeConfigPresetResponse): unknown {
+      const obj: any = {};
+      if (message.success !== false) {
+        obj.success = message.success;
       }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
+      return obj;
+    },
 
-  fromJSON(object: any): SetTradeConfigPresetResponse {
-    return { success: isSet(object.success) ? globalThis.Boolean(object.success) : false };
-  },
-
-  toJSON(message: SetTradeConfigPresetResponse): unknown {
-    const obj: any = {};
-    if (message.success !== false) {
-      obj.success = message.success;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<SetTradeConfigPresetResponse>, I>>(base?: I): SetTradeConfigPresetResponse {
-    return SetTradeConfigPresetResponse.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<SetTradeConfigPresetResponse>, I>>(object: I): SetTradeConfigPresetResponse {
-    const message = createBaseSetTradeConfigPresetResponse();
-    message.success = object.success ?? false;
-    return message;
-  },
-};
+    create<I extends Exact<DeepPartial<SetTradeConfigPresetResponse>, I>>(
+      base?: I
+    ): SetTradeConfigPresetResponse {
+      return SetTradeConfigPresetResponse.fromPartial(base ?? ({} as any));
+    },
+    fromPartial<I extends Exact<DeepPartial<SetTradeConfigPresetResponse>, I>>(
+      object: I
+    ): SetTradeConfigPresetResponse {
+      const message = createBaseSetTradeConfigPresetResponse();
+      message.success = object.success ?? false;
+      return message;
+    },
+  };
 
 export type TradeService = typeof TradeService;
 export const TradeService = {
@@ -908,18 +1067,22 @@ export const TradeService = {
     path: "/trade.Trade/SpotBuy",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: SpotBuyRequest) => Buffer.from(SpotBuyRequest.encode(value).finish()),
+    requestSerialize: (value: SpotBuyRequest) =>
+      Buffer.from(SpotBuyRequest.encode(value).finish()),
     requestDeserialize: (value: Buffer) => SpotBuyRequest.decode(value),
-    responseSerialize: (value: SpotBuyResponse) => Buffer.from(SpotBuyResponse.encode(value).finish()),
+    responseSerialize: (value: SpotBuyResponse) =>
+      Buffer.from(SpotBuyResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer) => SpotBuyResponse.decode(value),
   },
   spotSell: {
     path: "/trade.Trade/SpotSell",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: SpotSellRequest) => Buffer.from(SpotSellRequest.encode(value).finish()),
+    requestSerialize: (value: SpotSellRequest) =>
+      Buffer.from(SpotSellRequest.encode(value).finish()),
     requestDeserialize: (value: Buffer) => SpotSellRequest.decode(value),
-    responseSerialize: (value: SpotSellResponse) => Buffer.from(SpotSellResponse.encode(value).finish()),
+    responseSerialize: (value: SpotSellResponse) =>
+      Buffer.from(SpotSellResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer) => SpotSellResponse.decode(value),
   },
   getTradeConfigPresets: {
@@ -928,10 +1091,12 @@ export const TradeService = {
     responseStream: false,
     requestSerialize: (value: GetTradeConfigPresetsRequest) =>
       Buffer.from(GetTradeConfigPresetsRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => GetTradeConfigPresetsRequest.decode(value),
+    requestDeserialize: (value: Buffer) =>
+      GetTradeConfigPresetsRequest.decode(value),
     responseSerialize: (value: GetTradeConfigPresetsResponse) =>
       Buffer.from(GetTradeConfigPresetsResponse.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => GetTradeConfigPresetsResponse.decode(value),
+    responseDeserialize: (value: Buffer) =>
+      GetTradeConfigPresetsResponse.decode(value),
   },
   setTradeConfigPreset: {
     path: "/trade.Trade/SetTradeConfigPreset",
@@ -939,100 +1104,148 @@ export const TradeService = {
     responseStream: false,
     requestSerialize: (value: SetTradeConfigPresetRequest) =>
       Buffer.from(SetTradeConfigPresetRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => SetTradeConfigPresetRequest.decode(value),
+    requestDeserialize: (value: Buffer) =>
+      SetTradeConfigPresetRequest.decode(value),
     responseSerialize: (value: SetTradeConfigPresetResponse) =>
       Buffer.from(SetTradeConfigPresetResponse.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => SetTradeConfigPresetResponse.decode(value),
+    responseDeserialize: (value: Buffer) =>
+      SetTradeConfigPresetResponse.decode(value),
   },
 } as const;
 
 export interface TradeServer extends UntypedServiceImplementation {
   spotBuy: handleUnaryCall<SpotBuyRequest, SpotBuyResponse>;
   spotSell: handleUnaryCall<SpotSellRequest, SpotSellResponse>;
-  getTradeConfigPresets: handleUnaryCall<GetTradeConfigPresetsRequest, GetTradeConfigPresetsResponse>;
-  setTradeConfigPreset: handleUnaryCall<SetTradeConfigPresetRequest, SetTradeConfigPresetResponse>;
+  getTradeConfigPresets: handleUnaryCall<
+    GetTradeConfigPresetsRequest,
+    GetTradeConfigPresetsResponse
+  >;
+  setTradeConfigPreset: handleUnaryCall<
+    SetTradeConfigPresetRequest,
+    SetTradeConfigPresetResponse
+  >;
 }
 
 export interface TradeClient extends Client {
   spotBuy(
     request: SpotBuyRequest,
-    callback: (error: ServiceError | null, response: SpotBuyResponse) => void,
+    callback: (error: ServiceError | null, response: SpotBuyResponse) => void
   ): ClientUnaryCall;
   spotBuy(
     request: SpotBuyRequest,
     metadata: Metadata,
-    callback: (error: ServiceError | null, response: SpotBuyResponse) => void,
+    callback: (error: ServiceError | null, response: SpotBuyResponse) => void
   ): ClientUnaryCall;
   spotBuy(
     request: SpotBuyRequest,
     metadata: Metadata,
     options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: SpotBuyResponse) => void,
+    callback: (error: ServiceError | null, response: SpotBuyResponse) => void
   ): ClientUnaryCall;
   spotSell(
     request: SpotSellRequest,
-    callback: (error: ServiceError | null, response: SpotSellResponse) => void,
+    callback: (error: ServiceError | null, response: SpotSellResponse) => void
   ): ClientUnaryCall;
   spotSell(
     request: SpotSellRequest,
     metadata: Metadata,
-    callback: (error: ServiceError | null, response: SpotSellResponse) => void,
+    callback: (error: ServiceError | null, response: SpotSellResponse) => void
   ): ClientUnaryCall;
   spotSell(
     request: SpotSellRequest,
     metadata: Metadata,
     options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: SpotSellResponse) => void,
+    callback: (error: ServiceError | null, response: SpotSellResponse) => void
   ): ClientUnaryCall;
   getTradeConfigPresets(
     request: GetTradeConfigPresetsRequest,
-    callback: (error: ServiceError | null, response: GetTradeConfigPresetsResponse) => void,
+    callback: (
+      error: ServiceError | null,
+      response: GetTradeConfigPresetsResponse
+    ) => void
   ): ClientUnaryCall;
   getTradeConfigPresets(
     request: GetTradeConfigPresetsRequest,
     metadata: Metadata,
-    callback: (error: ServiceError | null, response: GetTradeConfigPresetsResponse) => void,
+    callback: (
+      error: ServiceError | null,
+      response: GetTradeConfigPresetsResponse
+    ) => void
   ): ClientUnaryCall;
   getTradeConfigPresets(
     request: GetTradeConfigPresetsRequest,
     metadata: Metadata,
     options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: GetTradeConfigPresetsResponse) => void,
+    callback: (
+      error: ServiceError | null,
+      response: GetTradeConfigPresetsResponse
+    ) => void
   ): ClientUnaryCall;
   setTradeConfigPreset(
     request: SetTradeConfigPresetRequest,
-    callback: (error: ServiceError | null, response: SetTradeConfigPresetResponse) => void,
+    callback: (
+      error: ServiceError | null,
+      response: SetTradeConfigPresetResponse
+    ) => void
   ): ClientUnaryCall;
   setTradeConfigPreset(
     request: SetTradeConfigPresetRequest,
     metadata: Metadata,
-    callback: (error: ServiceError | null, response: SetTradeConfigPresetResponse) => void,
+    callback: (
+      error: ServiceError | null,
+      response: SetTradeConfigPresetResponse
+    ) => void
   ): ClientUnaryCall;
   setTradeConfigPreset(
     request: SetTradeConfigPresetRequest,
     metadata: Metadata,
     options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: SetTradeConfigPresetResponse) => void,
+    callback: (
+      error: ServiceError | null,
+      response: SetTradeConfigPresetResponse
+    ) => void
   ): ClientUnaryCall;
 }
 
-export const TradeClient = makeGenericClientConstructor(TradeService, "trade.Trade") as unknown as {
-  new (address: string, credentials: ChannelCredentials, options?: Partial<ClientOptions>): TradeClient;
+export const TradeClient = makeGenericClientConstructor(
+  TradeService,
+  "trade.Trade"
+) as unknown as {
+  new (
+    address: string,
+    credentials: ChannelCredentials,
+    options?: Partial<ClientOptions>
+  ): TradeClient;
   service: typeof TradeService;
   serviceName: string;
 };
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | bigint | undefined;
+type Builtin =
+  | Date
+  | Function
+  | Uint8Array
+  | string
+  | number
+  | boolean
+  | bigint
+  | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & {
+      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
+    };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

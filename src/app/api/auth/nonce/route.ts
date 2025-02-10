@@ -1,32 +1,42 @@
-// app/api/auth/nonce/route.ts
-import { NextResponse } from "next/server";
-import { generateNonce } from "@/lib/nonce";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { createAuthClient } from "@/grpc/authClient"; // Adjust path if needed
+import { CreateSessionRequest, CreateSessionResponse } from "@/../proto/auth"; // Adjust path if needed
+import { promisifyGrpc } from "@/../proto/promisify";
 
-export async function POST(request: Request) {
-  const { walletAddress } = await request.json();
-
-  try {
-    const nonce = await generateNonce(walletAddress);
-    return NextResponse.json({ nonce });
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to generate nonce" },
-      { status: 500 }
-    );
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method Not Allowed" });
   }
-}
 
-// app/api/auth/verify/route.ts
-import { NextResponse } from "next/server";
-import { verifyNonce } from "@/lib/nonce";
+  const { telegramId, username, fingerprint, referrer } = req.body; // Get data from request body
 
-export async function POST(request: Request) {
-  const { walletAddress, signature } = await request.json();
+  if (!fingerprint) {
+    return res.status(400).json({ error: "Fingerprint is required" });
+  }
+
+  const client = createAuthClient();
+  const createSessionRequest = CreateSessionRequest.create({
+    telegramId: telegramId || "", // Placeholders if not available yet
+    username: username || "", // Placeholders if not available yet
+    fingerprint: fingerprint,
+    referrer: referrer || "", // Optional referrer
+  });
 
   try {
-    const isValid = await verifyNonce(walletAddress, signature);
-    return NextResponse.json({ valid: isValid });
-  } catch (error) {
-    return NextResponse.json({ error: "Verification failed" }, { status: 401 });
+    const createSessionResponse: CreateSessionResponse = await promisifyGrpc<
+      CreateSessionRequest,
+      CreateSessionResponse
+    >(client.createSession.bind(client), createSessionRequest);
+
+    return res.status(200).json({ nonce: createSessionResponse.nonce });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.error("Error creating session/nonce:", error);
+    return res
+      .status(500)
+      .json({ error: "Failed to generate nonce", details: error.message });
   }
 }
